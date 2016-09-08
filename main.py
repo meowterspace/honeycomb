@@ -25,7 +25,7 @@ player = pygame.image.load('images/astronaut.png')
 display = (TILECOL * MAPWIDTH, TILEROW * MAPHEIGHT)
 fog_of_war = pygame.Surface(display)
 
-tilemap = [
+TILEMAP = [
     4,0,0,0,0,0,0,0,0,0,
     0,4,4,4,4,4,4,4,4,0,
     0,1,2,1,2,1,2,1,2,0,
@@ -38,30 +38,43 @@ tilemap = [
     4,4,4,4,4,4,4,4,4,4
 
 ]
-
+# x * 10 + y
 def drawmap(screen):
-    for i in tilemap:
-        idy = int(floor(i/10))
-        idx = int(i % 10)
-        if i == '0':
+    for index, tile in enumerate(TILEMAP):
+
+        idy = int(floor(index/10) * 45)
+        idx = int((index % 10) * 45)
+        if tile == 0:
             screen.blit(TOP, (idx, idy))
-        elif i == '1':
+        elif tile == 1:
             screen.blit(FLOORX, (idx, idy))
-        elif i == '2':
+        elif tile == 2:
             screen.blit(FLOORO, (idx, idy))
-        elif i == '3':
+        elif tile == 3:
             screen.blit(GOAL, (idx, idy))
-        elif i == '4':
+        elif tile == 4:
             screen.blit(SIDE, (idx, idy))
 
+def checkvalid():
+    px = playerx/45
+    py = playery/45
+    checkindex = TILEMAP.index(px * 10 + py)
+    if checkindex != 0:
+        return True
+    else:
+        print ("Move invalid")
+        return False
 
 def move(obj, x, y):  # 25, 25
     global playerx, playery
-    playerx = playerx + x
-    playery = playery + y
-    print "playerpos: "+str(playerx)+", "+str(playery)
+    print checkvalid()
+    if checkvalid == True:
+        playerx = playerx + x
+        playery = playery + y
+        print "playerpos: "+str(playerx)+", "+str(playery)
     #DISPLAYSURF.blit(player, (playerx, playery))
     #pygame.display.update()
+
 
 def init():
     pygame.init()
@@ -80,19 +93,17 @@ def main():
         drawmap(screen)
         #pygame.draw.rect(fog_of_war, (60, 60, 60), (playerx,playery+45,50,50))
         #fog_of_war.set_colorkey((60, 60, 60))
-        for row in range(MAPHEIGHT):
-            for column in range(MAPWIDTH):
-                #DISPLAYSURF.blit(textures[tilemap[row][column]], (column*TILECOL,row*TILEROW))
-                #DISPLAYSURF.blit(fog_of_war, (0,0))
-                screen.blit(player, (playerx, playery))
+
+        screen.blit(player, (playerx, playery))
         for event in pygame.event.get():
             if event.type == pygame.QUIT: sys.exit(0)
             if not hasattr(event, 'key'): continue
-            if event.key == K_ESCAPE: sys.exit(0)
-            if event.key == K_LEFT: move(player, -25, 0)
-            if event.key == K_RIGHT: move(player, 25, 0)
-            if event.key == K_UP: move(player, 0, -25)
-            if event.key == K_DOWN: move(player, 0, 25)
+            if event.type == pygame.KEYDOWN:
+                if event.key == K_ESCAPE: sys.exit(0)
+                if event.key == K_LEFT: move(player, -45, 0)
+                if event.key == K_RIGHT: move(player, 45, 0)
+                if event.key == K_UP: move(player, 0, -45)
+                if event.key == K_DOWN: move(player, 0, 45)
 
         update()
 
