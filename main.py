@@ -86,16 +86,13 @@ def main():
                 #DISPLAYSURF.blit(fog_of_war, (0,0))
                 screen.blit(player, (playerx, playery))
         for event in pygame.event.get():
+            if event.type == pygame.QUIT: sys.exit(0)
             if not hasattr(event, 'key'): continue
             if event.key == K_ESCAPE: sys.exit(0)
-            if event.key == K_LEFT:
-                move(player, -25, 0)
-            if event.key == K_RIGHT:
-                move(player, 25, 0)
-            if event.key == K_UP:
-                move(player, 0, -25)
-            if event.key == K_DOWN:
-                move(player, 0, 25)
+            if event.key == K_LEFT: move(player, -25, 0)
+            if event.key == K_RIGHT: move(player, 25, 0)
+            if event.key == K_UP: move(player, 0, -25)
+            if event.key == K_DOWN: move(player, 0, 25)
 
         update()
 
