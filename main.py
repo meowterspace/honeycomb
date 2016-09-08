@@ -3,41 +3,80 @@ from pygame.locals import *
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
-TOP = 0
-FLOORX = 1
-FLOORO = 2
-GOAL = 3
-SIDE = 4
-textures = {
-    TOP:pygame.image.load('images/top.png'),
-    FLOORX:pygame.image.load('images/floorx.png'),
-    FLOORO:pygame.image.load('images/flooro.png'),
-    SIDE:pygame.image.load('images/side.png'),
-    GOAL:pygame.image.load('images/Goal.png')
 
-}
+
+TOP = pygame.image.load('images/top.png')
+FLOORX = pygame.image.load('images/floorx.png')
+FLOORO = pygame.image.load('images/flooro.png')
+SIDE = pygame.image.load('images/side.png')
+GOAL = pygame.image.load('images/Goal.png')
+player = pygame.image.load('images/astronaut.png')
 
 
 tilemap = [
-    [0,0,0,0,0,0,0,0,0,0],
-    [0,4,4,4,4,4,4,4,4,0],
-    [0,1,2,1,2,1,2,1,2,0],
-    [0,2,1,2,1,3,3,2,1,0],
-    [0,1,2,1,2,3,3,1,2,0],
-    [0,2,1,2,1,2,1,2,1,0],
-    [0,1,2,1,2,1,2,1,2,0],
-    [0,2,1,2,1,2,1,2,1,0],
-    [0,0,0,0,0,0,0,0,0,0],
-    [4,4,4,4,4,4,4,4,4,4]
+    1,0,0,0,0,0,0,0,0,0,
+    0,4,4,4,4,4,4,4,4,0,
+    0,1,2,1,2,1,2,1,2,0,
+    0,2,1,2,1,3,3,2,1,0,
+    0,1,2,1,2,3,3,1,2,0,
+    0,2,1,2,1,2,1,2,1,0,
+    0,1,2,1,2,1,2,1,2,0,
+    0,2,1,2,1,2,1,2,1,0,
+    0,0,0,0,0,0,0,0,0,0,
+    4,4,4,4,4,4,4,4,4,4
 
 ]
 
+idx = 0
+idy = 0
 
-def collision():
-    for row in tilemap:
-        for col in row:
-           if col == 0:
-               print(tilemap.index(0))
+def id(i):
+    num = tilemap.index(i)
+    if num >= 0 and num <= 9:
+        idy = 1
+    elif num >= 10 and num <= 19:
+        idy = 1
+    elif num >= 20 and num <= 29:
+        idy = 2
+    elif num >= 30 and num <= 39:
+        idy = 3
+    elif num >= 40 and num <= 49:
+        idy = 4
+    elif num >= 50 and num <= 59:
+        idy = 5
+    elif num >= 60 and num <= 69:
+        idy = 6
+    elif num >= 70 and num <= 79:
+        idy = 7
+    elif num >= 80 and num <= 89:
+        idy = 8
+    elif num >= 90 and num <= 99:
+        idy = 9
+
+    while num >= 10:
+        num = num - 10
+    idx = num * 45
+    idy = idy * 45
+
+
+def drawmap():
+    global idx, idy
+    for i in tilemap:
+        if i == 0:
+            id(i)
+            DISPLAYSURF.blit(TOP, (idx, idy))
+        elif i == 1:
+            id(i)
+            DISPLAYSURF.blit(FLOORX, (idx, idy))
+        elif i == 2:
+            id(i)
+            DISPLAYSURF.blit(FLOORO, (idx, idy))
+        elif i == 3:
+            id(i)
+            DISPLAYSURF.blit(GOAL, (idx, idy))
+        elif i == 4:
+            id(i)
+            DISPLAYSURF.blit(SIDE, (idx, idy))
 
 TILECOL = 45
 TILEROW = 45
@@ -50,7 +89,6 @@ pygame.init()
 DISPLAYSURF = pygame.display.set_mode((MAPWIDTH*TILECOL,MAPHEIGHT*TILEROW))
 
 
-player = pygame.image.load('images/astronaut.png')
 
 playerx = 45
 playery = 45
@@ -70,11 +108,12 @@ def move(obj, x, y):  # 25, 25
     #pygame.display.update()
 
 while True:
+    drawmap()
     pygame.draw.rect(fog_of_war, (60, 60, 60), (playerx,playery+45,50,50))
     fog_of_war.set_colorkey((60, 60, 60))
     for row in range(MAPHEIGHT):
         for column in range(MAPWIDTH):
-            DISPLAYSURF.blit(textures[tilemap[row][column]], (column*TILECOL,row*TILEROW))
+            #DISPLAYSURF.blit(textures[tilemap[row][column]], (column*TILECOL,row*TILEROW))
             DISPLAYSURF.blit(fog_of_war, (0,0))
             DISPLAYSURF.blit(player, (playerx, playery))
     for event in pygame.event.get():
@@ -88,6 +127,6 @@ while True:
             move(player, 0, -25)
         if event.key == K_DOWN:
             move(player, 0, 25)
-            collision()
+
 
     pygame.display.update()
