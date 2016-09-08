@@ -55,10 +55,10 @@ def drawmap(screen):
         elif tile == 4:
             screen.blit(SIDE, (idx, idy))
 
-def checkvalid():
-    px = playerx/45
-    py = playery/45
-    checkindex = TILEMAP.index(px * 10 + py)
+def checkvalid(x, y):
+    px = x/45
+    py = y/45
+    checkindex = TILEMAP[px * 10 + py]
     if checkindex != 0:
         return True
     else:
@@ -67,13 +67,16 @@ def checkvalid():
 
 def move(obj, x, y):  # 25, 25
     global playerx, playery
-    print checkvalid()
-    if checkvalid == True:
-        playerx = playerx + x
-        playery = playery + y
+    playerx = playerx + x
+    playery = playery + y
+    if checkvalid(playerx, playery) == True:
         print "playerpos: "+str(playerx)+", "+str(playery)
+    else:
+        playerx = playerx - x
+        playery = playery - y
     #DISPLAYSURF.blit(player, (playerx, playery))
     #pygame.display.update()
+
 
 
 def init():
