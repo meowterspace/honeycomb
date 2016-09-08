@@ -1,6 +1,9 @@
 import pygame, sys, math
 from pygame.locals import *
 
+
+
+fog_of_war = pygame.Surface(display)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 TILECOL = 45
@@ -13,7 +16,8 @@ hor = 0
 vert = 0
 idx = 0
 idy = 0
-
+DISPLAYSURF = pygame.display.set_mode((MAPWIDTH * TILECOL, MAPHEIGHT * TILEROW))
+display = (TILECOL * MAPWIDTH, TILEROW * MAPHEIGHT)
 
 TOP = pygame.image.load('images/top.png')
 FLOORX = pygame.image.load('images/floorx.png')
@@ -21,9 +25,6 @@ FLOORO = pygame.image.load('images/flooro.png')
 SIDE = pygame.image.load('images/side.png')
 GOAL = pygame.image.load('images/Goal.png')
 player = pygame.image.load('images/astronaut.png')
-display = (TILECOL * MAPWIDTH, TILEROW * MAPHEIGHT)
-DISPLAYSURF = pygame.display.set_mode((MAPWIDTH * TILECOL, MAPHEIGHT * TILEROW))
-fog_of_war = pygame.Surface(display)
 
 tilemap = [
     1,0,0,0,0,0,0,0,0,0,
@@ -67,66 +68,75 @@ def id(i):
     idx = num * 45
     idy = idy * 45
 
-
-def drawmap():
+class map:
     global idx, idy
-    for i in tilemap:
-        if i == 0:
-            id(i)
-            DISPLAYSURF.blit(TOP, (idx, idy))
-        elif i == 1:
-            id(i)
-            DISPLAYSURF.blit(FLOORX, (idx, idy))
-        elif i == 2:
-            id(i)
-            DISPLAYSURF.blit(FLOORO, (idx, idy))
-        elif i == 3:
-            id(i)
-            DISPLAYSURF.blit(GOAL, (idx, idy))
-        elif i == 4:
-            id(i)
-            DISPLAYSURF.blit(SIDE, (idx, idy))
+    def __init__(self):
+        
+    def draw(self):    
+        for i in tilemap:
+            if i == 0:
+                id(i)
+                DISPLAYSURF.blit(TOP, (idx, idy))
+            elif i == 1:
+                id(i)
+                DISPLAYSURF.blit(FLOORX, (idx, idy))
+            elif i == 2:
+                id(i)
+                DISPLAYSURF.blit(FLOORO, (idx, idy))
+            elif i == 3:
+                id(i)
+                DISPLAYSURF.blit(GOAL, (idx, idy))
+            elif i == 4:
+                id(i)
+                DISPLAYSURF.blit(SIDE, (idx, idy))
+    def update(self):
 
-
-def move(obj, x, y):  # 25, 25
-    global playerx, playery
-    playerx = playerx + x
-    playery = playery + y
-    print "playerpos: "+str(playerx)+", "+str(playery)
-    #DISPLAYSURF.blit(player, (playerx, playery))
-    #pygame.display.update()
-
+class player:
+    def __init__(self):
+        global playerx, playery
+    def draw(self):
+        DISPLAYSURF.blit(player, (playerx, playery))
+    
+    def move(self, x, y):
+        playerx = playerx + x
+        playery = playery + y
+        print "playerpos: "+str(playerx)+", "+str(playery)
+        self.draw()
+        
+class fog:
+    def __init__(self):
+    def draw(self):
+        pygame.draw.rect(fog_of_war, (60, 60, 60), (playerx, playery + 45, 50, 50))
+        fog_of_war.fill((0, 0, 0))
+        fog_of_war.set_colorkey((60, 60, 60))
+        DISPLAYSURF.blit(fog_of_war, (0, 0))
+        
 def init():
     pygame.init()
-    fog_of_war.fill((0, 0, 0))
-    drawmap()
+    map.draw()
+    player.draw()
+    fog.draw()
 
 def update():
     pygame.display.update()
 
 def main():
-    init()
-    pygame.draw.rect(fog_of_war, (60, 60, 60), (playerx,playery+45,50,50))
-    fog_of_war.set_colorkey((60, 60, 60))
-    for row in range(MAPHEIGHT):
-        for column in range(MAPWIDTH):
-            #DISPLAYSURF.blit(textures[tilemap[row][column]], (column*TILECOL,row*TILEROW))
-            DISPLAYSURF.blit(fog_of_war, (0,0))
-            DISPLAYSURF.blit(player, (playerx, playery))
     for event in pygame.event.get():
         if not hasattr(event, 'key'): continue
         if event.key == K_ESCAPE: sys.exit(0)
         if event.key == K_LEFT:
-            move(player, -25, 0)
+            player.move( -25, 0)
         if event.key == K_RIGHT:
-            move(player, 25, 0)
+            player.move( 25, 0)
         if event.key == K_UP:
-            move(player, 0, -25)
+            player.move( 0, -25)
         if event.key == K_DOWN:
-            move(player, 0, 25)
+            player.move( 0, 25)
 
     update()
 
+
+init()
 while True:
 
     if __name__ == '__main__':
