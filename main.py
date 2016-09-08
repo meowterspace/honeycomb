@@ -1,3 +1,13 @@
+"""
+
+Written at 2am on the day it was due
+By Cathryn Dunicliff      @meowter_sapce
+Because she's an idiot
+
+https://github.com/meowterspace/honeycomb
+
+"""
+
 import pygame, sys, math
 from pygame.locals import *
 from math import floor
@@ -14,7 +24,7 @@ hor = 0
 vert = 0
 idx = 0
 idy = 0
-
+secondplay = False
 
 TOP = pygame.image.load('images/top.png')
 FLOORX = pygame.image.load('images/floorx.png')
@@ -22,6 +32,7 @@ FLOORO = pygame.image.load('images/flooro.png')
 SIDE = pygame.image.load('images/side.png')
 GOAL = pygame.image.load('images/Goal.png')
 player = pygame.image.load('images/astronaut.png')
+player2 = pygame.image.load('images/astro2.png')
 display = (TILECOL * MAPWIDTH, TILEROW * MAPHEIGHT)
 fog_of_war = pygame.Surface(display)
 
@@ -38,6 +49,8 @@ TILEMAP = [
     4,4,4,4,4,4,4,4,4,4
 
 ]
+
+playermoves = []
 # x * 10 + y
 def drawmap(screen):
     for index, tile in enumerate(TILEMAP):
@@ -58,7 +71,7 @@ def drawmap(screen):
 def checkvalid(x, y):
     px = x/45
     py = y/45
-    checkindex = TILEMAP[px * 10 + py]
+    checkindex = TILEMAP[py * 10 + px]
     if checkindex != 0:
         return True
     else:
@@ -74,6 +87,7 @@ def move(obj, x, y):  # 25, 25
     else:
         playerx = playerx - x
         playery = playery - y
+        return (playerx, playery)
     #DISPLAYSURF.blit(player, (playerx, playery))
     #pygame.display.update()
 
@@ -89,6 +103,7 @@ def update():
     pygame.display.flip()
 
 def main():
+    global secondplay
     screen = init()
     clock = pygame.time.Clock()
     while True:
@@ -98,16 +113,34 @@ def main():
         #fog_of_war.set_colorkey((60, 60, 60))
 
         screen.blit(player, (playerx, playery))
+        if secondplay:
+            screen.blit(player2, (playerx, playery))
         for event in pygame.event.get():
             if event.type == pygame.QUIT: sys.exit(0)
             if not hasattr(event, 'key'): continue
             if event.type == pygame.KEYDOWN:
                 if event.key == K_ESCAPE: sys.exit(0)
-                if event.key == K_LEFT: move(player, -45, 0)
-                if event.key == K_RIGHT: move(player, 45, 0)
-                if event.key == K_UP: move(player, 0, -45)
-                if event.key == K_DOWN: move(player, 0, 45)
-
+                if event.key == K_LEFT:
+                    move(player, -45, 0)
+                    if secondplay == False: playermoves.append("LEFT")
+                if event.key == K_RIGHT:
+                    move(player, 45, 0)
+                    if secondplay == False: playermoves.append("RIGHT")
+                if event.key == K_UP:
+                    move(player, 0, -45)
+                    if secondplay == False: playermoves.append("UP")
+                if event.key == K_DOWN:
+                    move(player, 0, 45)
+                    if secondplay == False: playermoves.append("DOWN")
+                if event.key == K_SPACE:
+                    secondplay = True
+                    print(playermoves)
+            if secondplay == True:
+                for i in playermoves:
+                    if i == "LEFT": move(player2, -45, 0)
+                    if i == "RIGHT": move(player2, 45, 0)
+                    if i == "UP": move(player2, 0, -45)
+                    if i == "DOWN": move(player2, 0, 45)
         update()
 
 
