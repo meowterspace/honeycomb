@@ -3,7 +3,19 @@ from pygame.locals import *
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
-
+TILECOL = 45
+TILEROW = 45
+MAPWIDTH = 10
+MAPHEIGHT = 10
+playerx = 45
+playery = 45
+hor = 0
+vert = 0
+idx = 0
+idy = 0
+display = (TILECOL*MAPWIDTH, TILEROW*MAPHEIGHT)
+DISPLAYSURF = pygame.display.set_mode((MAPWIDTH*TILECOL,MAPHEIGHT*TILEROW))
+fog_of_war = pygame.Surface(display)
 
 TOP = pygame.image.load('images/top.png')
 FLOORX = pygame.image.load('images/floorx.png')
@@ -26,9 +38,6 @@ tilemap = [
     4,4,4,4,4,4,4,4,4,4
 
 ]
-
-idx = 0
-idy = 0
 
 def id(i):
     num = tilemap.index(i)
@@ -78,26 +87,6 @@ def drawmap():
             id(i)
             DISPLAYSURF.blit(SIDE, (idx, idy))
 
-TILECOL = 45
-TILEROW = 45
-MAPWIDTH = 10
-MAPHEIGHT = 10
-
-display = (TILECOL*MAPWIDTH, TILEROW*MAPHEIGHT)
-
-pygame.init()
-DISPLAYSURF = pygame.display.set_mode((MAPWIDTH*TILECOL,MAPHEIGHT*TILEROW))
-
-
-
-playerx = 45
-playery = 45
-hor = 0
-vert = 0
-
-
-fog_of_war = pygame.Surface(display)
-fog_of_war.fill((0, 0, 0))
 
 def move(obj, x, y):  # 25, 25
     global playerx, playery
@@ -106,9 +95,17 @@ def move(obj, x, y):  # 25, 25
     print "playerpos: "+str(playerx)+", "+str(playery)
     #DISPLAYSURF.blit(player, (playerx, playery))
     #pygame.display.update()
-
-while True:
+    
+def init():
+    pygame.init()
+    fog_of_war.fill((0, 0, 0))
     drawmap()
+    
+def update():
+    pygame.display.update()
+
+def main():
+    init()
     pygame.draw.rect(fog_of_war, (60, 60, 60), (playerx,playery+45,50,50))
     fog_of_war.set_colorkey((60, 60, 60))
     for row in range(MAPHEIGHT):
@@ -128,5 +125,7 @@ while True:
         if event.key == K_DOWN:
             move(player, 0, 25)
 
+    update()
 
-    pygame.display.update()
+if __name__ == '__main__':
+    main()
