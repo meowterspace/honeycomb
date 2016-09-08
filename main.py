@@ -13,9 +13,7 @@ hor = 0
 vert = 0
 idx = 0
 idy = 0
-display = (TILECOL*MAPWIDTH, TILEROW*MAPHEIGHT)
-DISPLAYSURF = pygame.display.set_mode((MAPWIDTH*TILECOL,MAPHEIGHT*TILEROW))
-fog_of_war = pygame.Surface(display)
+
 
 TOP = pygame.image.load('images/top.png')
 FLOORX = pygame.image.load('images/floorx.png')
@@ -95,17 +93,20 @@ def move(obj, x, y):  # 25, 25
     print "playerpos: "+str(playerx)+", "+str(playery)
     #DISPLAYSURF.blit(player, (playerx, playery))
     #pygame.display.update()
-    
+
 def init():
     pygame.init()
     fog_of_war.fill((0, 0, 0))
     drawmap()
-    
+
 def update():
     pygame.display.update()
 
 def main():
     init()
+    display = (TILECOL * MAPWIDTH, TILEROW * MAPHEIGHT)
+    DISPLAYSURF = pygame.display.set_mode((MAPWIDTH * TILECOL, MAPHEIGHT * TILEROW))
+    fog_of_war = pygame.Surface(display)
     pygame.draw.rect(fog_of_war, (60, 60, 60), (playerx,playery+45,50,50))
     fog_of_war.set_colorkey((60, 60, 60))
     for row in range(MAPHEIGHT):
@@ -127,5 +128,7 @@ def main():
 
     update()
 
-if __name__ == '__main__':
-    main()
+while True:
+
+    if __name__ == '__main__':
+        main()
