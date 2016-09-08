@@ -21,7 +21,9 @@ FLOORO = pygame.image.load('images/flooro.png')
 SIDE = pygame.image.load('images/side.png')
 GOAL = pygame.image.load('images/Goal.png')
 player = pygame.image.load('images/astronaut.png')
-
+display = (TILECOL * MAPWIDTH, TILEROW * MAPHEIGHT)
+DISPLAYSURF = pygame.display.set_mode((MAPWIDTH * TILECOL, MAPHEIGHT * TILEROW))
+fog_of_war = pygame.Surface(display)
 
 tilemap = [
     1,0,0,0,0,0,0,0,0,0,
@@ -104,9 +106,6 @@ def update():
 
 def main():
     init()
-    display = (TILECOL * MAPWIDTH, TILEROW * MAPHEIGHT)
-    DISPLAYSURF = pygame.display.set_mode((MAPWIDTH * TILECOL, MAPHEIGHT * TILEROW))
-    fog_of_war = pygame.Surface(display)
     pygame.draw.rect(fog_of_war, (60, 60, 60), (playerx,playery+45,50,50))
     fog_of_war.set_colorkey((60, 60, 60))
     for row in range(MAPHEIGHT):
