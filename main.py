@@ -1,14 +1,11 @@
 """
-
 Written at 2am on the day it was due
 By Cathryn Dunicliff      @meowter_sapce
 Because she's an idiot
-
 https://github.com/meowterspace/honeycomb
-
 """
 
-import pygame, sys, math
+import pygame, sys, math, time
 from pygame.locals import *
 from math import floor
 
@@ -140,21 +137,26 @@ def main():
             update(player[0], current_x, current_y, screen)
             player_positions[0] = [current_x, current_y]
             if player_count >= 2:
+                time.sleep(1)
                 current_index = 0
                 for i in range(player_count-1):
                     for j in player_positions[current_index]:
                         current_x, current_y = player_positions[current_index + 1]
                         if j == "LEFT":
                             current_x, current_y = move(current_x, current_y, -45, 0, screen)  # LEFT = (-45,0)  RIGHT = (45, 0)  UP = (0,-45)  DOWN=(0, 45)
+                            print "LEFT"
                         elif j == "RIGHT":
                             current_x, current_y = move(current_x, current_y, 45, 0, screen)
+                            print "RIGHT"
                         elif j == "UP":
                             current_x, current_y = move(current_x, current_y, 0, -45, screen)
+                            print "UP"
                         elif j == "DOWN":
                             current_x, current_y = move(current_x, current_y, 0, 45, screen)
-                        update(0, current_x, current_y)
+                            print "DOWN"
+                        update(player[0], current_x, current_y, screen)
                         player_positions[current_index + 1] = [current_x, current_y]
-                        update(player[current_index + 1], current_x, current_y)
+                        update(player[current_index + 1], current_x, current_y, screen)
                         current_index = current_index + 1
 
 
