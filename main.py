@@ -1,7 +1,7 @@
 """
 ========================================================================================================================
 Written at 2am on the day it was due
-By Cathryn Dunicliff      @meowter_sapce
+By Cathryn Dunicliff
 Because she's an idiot
 https://github.com/meowterspace/honeycomb
 http://meowter.space
@@ -19,7 +19,7 @@ TILE_COLUMNS = 45
 TILE_ROWS = 45
 MAP_WIDTH = 10
 MAP_HEIGHT = 10
-player_positions = [[45, 45],[45, 45],[45, 45],[45, 45],[45, 45],[45, 45]]
+player_positions = [[135, 135],[135, 135],[135, 135],[135, 135],[135, 135],[135, 135]]
 hor = 0
 vert = 0
 idx = 0
@@ -32,6 +32,7 @@ FLOORX = pygame.image.load('images/floorx.png')
 FLOORO = pygame.image.load('images/flooro.png')
 SIDE = pygame.image.load('images/side.png')
 GOAL = pygame.image.load('images/Goal.png')
+BLACK = pygame.image.load('images/black.png')
 player = [pygame.image.load('images/astro1.png'),
            pygame.image.load('images/astro2.png'),
            pygame.image.load('images/astro3.png'),
@@ -42,16 +43,16 @@ display = (TILE_COLUMNS * MAP_WIDTH, TILE_ROWS * MAP_HEIGHT)
 fog_of_war = pygame.Surface(display)
 
 TILEMAP = [
-    0,0,0,0,0,0,0,0,0,0,
-    0,4,4,4,4,4,4,4,4,0,
-    0,1,2,1,2,1,2,1,2,0,
-    0,2,1,2,1,3,3,2,1,0,
-    0,1,2,1,2,3,3,1,2,0,
-    0,2,1,2,1,2,1,2,1,0,
-    0,1,2,1,2,1,2,1,2,0,
-    0,2,1,2,1,2,1,2,1,0,
-    0,0,0,0,0,0,0,0,0,0,
-    4,4,4,4,4,4,4,4,4,4
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 4, 4, 4, 4, 4, 4, 4, 4, 0,
+    0, 1, 2, 1, 2, 1, 2, 1, 2, 0,
+    0, 2, 1, 2, 1, 3, 3, 2, 1, 0,
+    0, 1, 2, 1, 2, 3, 3, 1, 2, 0,
+    0, 2, 1, 2, 1, 2, 1, 2, 1, 0,
+    0, 1, 2, 1, 2, 1, 2, 1, 2, 0,
+    0, 2, 1, 2, 1, 2, 1, 2, 1, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    4, 4, 4, 4, 4, 4, 4, 4, 4, 4
 
 ]
 
@@ -81,6 +82,8 @@ def draw_map(screen):
             screen.blit(GOAL, (idx, idy))
         elif tile == 4:
             screen.blit(SIDE, (idx, idy))
+        elif tile == 5:
+            screen.blit(BLACK, (idx, idy))
         else:
             print "No known tiles found"
 
@@ -127,7 +130,7 @@ def main():
         draw_map(screen)
         #pygame.draw.rect(fog_of_war, (60, 60, 60), (playerx,playery+45,50,50))
         #fog_of_war.set_colorkey((60, 60, 60))
-
+        move_count = 0
         for event in pygame.event.get():
             if event.type == pygame.QUIT: sys.exit(0)
             elif not hasattr(event, 'key'): continue
@@ -138,46 +141,54 @@ def main():
                 elif event.key == K_LEFT:
                     current_x, current_y = move(current_x, current_y, -45, 0)   # LEFT = (-45,0)  RIGHT = (45, 0)  UP = (0,-45)  DOWN=(0, 45)
                     future_moves[player_count-1].append("LEFT")
+                    move_count = move_count + 1
+                    update(player[0], current_x, current_y, screen)
+                    player_positions[0] = [current_x, current_y]
                 elif event.key == K_RIGHT:
                     current_x, current_y = move(current_x, current_y, 45, 0)
                     future_moves[player_count-1].append("RIGHT")
+                    move_count = move_count + 1
+                    update(player[0], current_x, current_y, screen)
+                    player_positions[0] = [current_x, current_y]
                 elif event.key == K_UP:
                     current_x, current_y = move(current_x, current_y, 0, -45)
                     future_moves[player_count-1].append("UP")
+                    move_count = move_count + 1
+                    update(player[0], current_x, current_y, screen)
+                    player_positions[0] = [current_x, current_y]
                 elif event.key == K_DOWN:
                     current_x, current_y = move(current_x, current_y, 0, 45)
                     future_moves[player_count-1].append("DOWN")
+                    move_count = move_count + 1
+                    update(player[0], current_x, current_y, screen)
+                    player_positions[0] = [current_x, current_y]
                 elif event.key == K_SPACE:
                     player_count = player_count+1
                     print("NEW PLAYER ADDED")
                     print("TOTAL PLAYERS: "+str(player_count))
-                else: pass
-            else: pass
-            update(player[0], current_x, current_y, screen)
-            player_positions[0] = [current_x, current_y]
+                    
             if player_count >= 2:
                 #time.sleep(1)
-                current_index = 0
-                for i in range(player_count-1):
-                    for j in future_moves[current_index]:
-                        current_x, current_y = player_positions[current_index + 1]
-                        if j == "LEFT":
-                            current_x, current_y = move(current_x, current_y, -45, 0)  # LEFT = (-45,0)  RIGHT = (45, 0)  UP = (0,-45)  DOWN=(0, 45)
-                            print "LEFT"
-                        elif j == "RIGHT":
-                            current_x, current_y = move(current_x, current_y, 45, 0)
-                            print "RIGHT"
-                        elif j == "UP":
-                            current_x, current_y = move(current_x, current_y, 0, -45)
-                            print "UP"
-                        elif j == "DOWN":
-                            current_x, current_y = move(current_x, current_y, 0, 45)
-                            print "DOWN"
-                        else: pass
-                        update(player[current_index + 2], current_x, current_y, screen)
-                        player_positions[current_index + 1] = [current_x, current_y]
-                        current_index = current_index + 1
-            else: pass
+                current_x, current_y = 45, 45
+                for current_index in range(1,player_count): # Repeats for number of extra players in game
+                    max_move = len(future_moves[current_index])
+                    if move_count != max_move:
+                        for direction in future_moves[current_index]:
+                            current_x, current_y = player_positions[current_index]
+                            if direction == "LEFT":
+                                current_x, current_y = move(current_x, current_y, -45, 0)  # LEFT = (-45,0)  RIGHT = (45, 0)  UP = (0,-45)  DOWN=(0, 45)
+                                print "LEFT"
+                            elif direction == "RIGHT":
+                                current_x, current_y = move(current_x, current_y, 45, 0)
+                                print "RIGHT"
+                            elif direction == "UP":
+                                current_x, current_y = move(current_x, current_y, 0, -45)
+                                print "UP"
+                            elif direction == "DOWN":
+                                current_x, current_y = move(current_x, current_y, 0, 45)
+                                print "DOWN"
+                            player_positions[current_index] = [current_x, current_y]
+                        update(player[current_index], current_x, current_y, screen)
 
 if __name__ == '__main__':
         main()
