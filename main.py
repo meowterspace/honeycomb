@@ -7,7 +7,7 @@ http://meowter.space
 http://twitter.com/meowter_sapce
 """
 
-import pygame, sys, math, time
+import pygame, sys, math, time, os
 from pygame.locals import *
 from math import floor
 
@@ -53,6 +53,14 @@ TILEMAP = [
 
 ]
 
+
+
+def readRoomsfile(filename):
+    assert os.path.exists(filename), 'No found level file'
+    mapFile = open(filename, 'r')
+    content = mapFile.readlines()
+    mapFile.close()
+
 # x * 10 + y
 def draw_map(screen):
     for index, tile in enumerate(TILEMAP):
@@ -69,6 +77,8 @@ def draw_map(screen):
             screen.blit(GOAL, (idx, idy))
         elif tile == 4:
             screen.blit(SIDE, (idx, idy))
+        else:
+            print "No known tiles found"
 
 def check_valid(x, y):
     px = x/45
@@ -120,47 +130,54 @@ def main():
                     current_x, current_y = move(current_x, current_y, -45, 0)   # LEFT = (-45,0)  RIGHT = (45, 0)  UP = (0,-45)  DOWN=(0, 45)
                     if player_count >= 2:
                         future_moves[player_count-2].append("LEFT")
+                    else: pass
                 elif event.key == K_RIGHT:
                     current_x, current_y = move(current_x, current_y, 45, 0)
                     if player_count >= 2:
                         future_moves[player_count-2].append("RIGHT")
+                    else: pass
                 elif event.key == K_UP:
                     current_x, current_y = move(current_x, current_y, 0, -45)
                     if player_count >= 2:
                         future_moves[player_count-2].append("UP")
+                    else: pass
                 elif event.key == K_DOWN:
                     current_x, current_y = move(current_x, current_y, 0, 45)
                     if player_count >= 2:
                         future_moves[player_count-2].append("DOWN")
+                    else: pass
                 elif event.key == K_SPACE:
                     player_count = player_count+1
                     print("NEW PLAYER ADDED")
                     print("TOTAL PLAYERS: "+str(player_count))
+                else: pass
+            else: pass
             update(player[0], current_x, current_y, screen)
             player_positions[0] = [current_x, current_y]
             if player_count >= 2:
                 #time.sleep(1)
                 current_index = 0
                 for i in range(player_count-1):
-                    for j in player_positions[current_index]:
+                    for j in future_moves[current_index]:
                         current_x, current_y = player_positions[current_index + 1]
                         if j == "LEFT":
-                            current_x, current_y = move(current_x, current_y, -45, 0, screen)  # LEFT = (-45,0)  RIGHT = (45, 0)  UP = (0,-45)  DOWN=(0, 45)
+                            current_x, current_y = move(current_x, current_y, -45, 0)  # LEFT = (-45,0)  RIGHT = (45, 0)  UP = (0,-45)  DOWN=(0, 45)
                             print "LEFT"
                         elif j == "RIGHT":
-                            current_x, current_y = move(current_x, current_y, 45, 0, screen)
+                            current_x, current_y = move(current_x, current_y, 45, 0)
                             print "RIGHT"
                         elif j == "UP":
-                            current_x, current_y = move(current_x, current_y, 0, -45, screen)
+                            current_x, current_y = move(current_x, current_y, 0, -45)
                             print "UP"
                         elif j == "DOWN":
-                            current_x, current_y = move(current_x, current_y, 0, 45, screen)
+                            current_x, current_y = move(current_x, current_y, 0, 45)
                             print "DOWN"
+                        else: pass
                         update(player[0], current_x, current_y, screen)
                         player_positions[current_index + 1] = [current_x, current_y]
                         update(player[current_index + 1], current_x, current_y, screen)
                         current_index = current_index + 1
-
+            else: pass
 
 if __name__ == '__main__':
         main()
