@@ -3,6 +3,8 @@ Written at 2am on the day it was due
 By Cathryn Dunicliff      @meowter_sapce
 Because she's an idiot
 https://github.com/meowterspace/honeycomb
+http://meowter.space
+http://twitter.com/meowter_sapce
 """
 
 import pygame, sys, math, time
@@ -117,19 +119,19 @@ def main():
                 elif event.key == K_LEFT:
                     current_x, current_y = move(current_x, current_y, -45, 0)   # LEFT = (-45,0)  RIGHT = (45, 0)  UP = (0,-45)  DOWN=(0, 45)
                     if player_count >= 2:
-                        future_moves[player_count].append("LEFT")
+                        future_moves[player_count-2].append("LEFT")
                 elif event.key == K_RIGHT:
                     current_x, current_y = move(current_x, current_y, 45, 0)
                     if player_count >= 2:
-                        future_moves[player_count].append("RIGHT")
+                        future_moves[player_count-2].append("RIGHT")
                 elif event.key == K_UP:
                     current_x, current_y = move(current_x, current_y, 0, -45)
                     if player_count >= 2:
-                        future_moves[player_count].append("UP")
+                        future_moves[player_count-2].append("UP")
                 elif event.key == K_DOWN:
                     current_x, current_y = move(current_x, current_y, 0, 45)
                     if player_count >= 2:
-                        future_moves[player_count].append("DOWN")
+                        future_moves[player_count-2].append("DOWN")
                 elif event.key == K_SPACE:
                     player_count = player_count+1
                     print("NEW PLAYER ADDED")
@@ -137,7 +139,7 @@ def main():
             update(player[0], current_x, current_y, screen)
             player_positions[0] = [current_x, current_y]
             if player_count >= 2:
-                time.sleep(1)
+                #time.sleep(1)
                 current_index = 0
                 for i in range(player_count-1):
                     for j in player_positions[current_index]:
