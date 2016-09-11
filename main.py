@@ -1,10 +1,12 @@
 """
+========================================================================================================================
 Written at 2am on the day it was due
 By Cathryn Dunicliff      @meowter_sapce
 Because she's an idiot
 https://github.com/meowterspace/honeycomb
 http://meowter.space
 http://twitter.com/meowter_sapce
+========================================================================================================================
 """
 
 import pygame, sys, math, time, os
@@ -53,7 +55,9 @@ TILEMAP = [
 
 ]
 
-
+#=======================================================================================================================
+# FUNCTIONS
+#=======================================================================================================================
 
 def readRoomsfile(filename):
     assert os.path.exists(filename), 'No found level file'
@@ -61,7 +65,7 @@ def readRoomsfile(filename):
     content = mapFile.readlines()
     mapFile.close()
 
-# x * 10 + y
+# y * 10 + x
 def draw_map(screen):
     for index, tile in enumerate(TILEMAP):
 
@@ -110,6 +114,10 @@ def update(player, x, y, screen):
     screen.blit(player, (x, y))
     pygame.display.flip()
 
+#=======================================================================================================================
+# MAIN
+#=======================================================================================================================
+
 def main():
     global player_count
     screen = init()
@@ -124,28 +132,21 @@ def main():
             if event.type == pygame.QUIT: sys.exit(0)
             elif not hasattr(event, 'key'): continue
             elif event.type == pygame.KEYDOWN:
+                print future_moves
                 current_x, current_y = player_positions[0]
                 if event.key == K_ESCAPE: sys.exit(0)
                 elif event.key == K_LEFT:
                     current_x, current_y = move(current_x, current_y, -45, 0)   # LEFT = (-45,0)  RIGHT = (45, 0)  UP = (0,-45)  DOWN=(0, 45)
-                    if player_count >= 2:
-                        future_moves[player_count-2].append("LEFT")
-                    else: pass
+                    future_moves[player_count-1].append("LEFT")
                 elif event.key == K_RIGHT:
                     current_x, current_y = move(current_x, current_y, 45, 0)
-                    if player_count >= 2:
-                        future_moves[player_count-2].append("RIGHT")
-                    else: pass
+                    future_moves[player_count-1].append("RIGHT")
                 elif event.key == K_UP:
                     current_x, current_y = move(current_x, current_y, 0, -45)
-                    if player_count >= 2:
-                        future_moves[player_count-2].append("UP")
-                    else: pass
+                    future_moves[player_count-1].append("UP")
                 elif event.key == K_DOWN:
                     current_x, current_y = move(current_x, current_y, 0, 45)
-                    if player_count >= 2:
-                        future_moves[player_count-2].append("DOWN")
-                    else: pass
+                    future_moves[player_count-1].append("DOWN")
                 elif event.key == K_SPACE:
                     player_count = player_count+1
                     print("NEW PLAYER ADDED")
@@ -173,9 +174,8 @@ def main():
                             current_x, current_y = move(current_x, current_y, 0, 45)
                             print "DOWN"
                         else: pass
-                        update(player[0], current_x, current_y, screen)
+                        update(player[current_index + 2], current_x, current_y, screen)
                         player_positions[current_index + 1] = [current_x, current_y]
-                        update(player[current_index + 1], current_x, current_y, screen)
                         current_index = current_index + 1
             else: pass
 
