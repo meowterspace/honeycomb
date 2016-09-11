@@ -166,7 +166,6 @@ def main():
                     player_count = player_count+1
                     print("NEW PLAYER ADDED")
                     print("TOTAL PLAYERS: "+str(player_count))
-                    
             if player_count >= 2:
                 #time.sleep(1)
                 current_x, current_y = 45, 45
@@ -189,6 +188,8 @@ def main():
                                 print "DOWN"
                             player_positions[current_index] = [current_x, current_y]
                         update(player[current_index], current_x, current_y, screen)
+                        current_x, current_y = player_positions[0]
+                        update(player[0], current_x, current_y, screen)
 
 if __name__ == '__main__':
         main()
