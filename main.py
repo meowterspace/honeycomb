@@ -113,69 +113,48 @@ def main():
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT: sys.exit(0)
-            if not hasattr(event, 'key'): continue
-            if event.type == pygame.KEYDOWN:
+            elif not hasattr(event, 'key'): continue
+            elif event.type == pygame.KEYDOWN:
+                current_x, current_y = player_positions[0]
                 if event.key == K_ESCAPE: sys.exit(0)
-                if event.key == K_LEFT:
-                    current_x, current_y = player_positions[0]
+                elif event.key == K_LEFT:
                     current_x, current_y = move(current_x, current_y, -45, 0)   # LEFT = (-45,0)  RIGHT = (45, 0)  UP = (0,-45)  DOWN=(0, 45)
-                    update(player[0], current_x, current_y, screen)
-                    player_positions[0] = [current_x, current_y]
                     if player_count >= 2:
                         future_moves[player_count].append("LEFT")
-                if event.key == K_RIGHT:
-                    current_x, current_y = player_positions[0]
+                elif event.key == K_RIGHT:
                     current_x, current_y = move(current_x, current_y, 45, 0)
-                    update(player[0], current_x, current_y, screen)
-                    player_positions[0] = [current_x, current_y]
                     if player_count >= 2:
                         future_moves[player_count].append("RIGHT")
-                if event.key == K_UP:
-                    current_x, current_y = player_positions[0]
+                elif event.key == K_UP:
                     current_x, current_y = move(current_x, current_y, 0, -45)
-                    update(player[0], current_x, current_y, screen)
-                    player_positions[0] = [current_x, current_y]
                     if player_count >= 2:
-                        future_moves[player_count].append("RIGHT")
-                if event.key == K_DOWN:
-                    current_x, current_y = player_positions[0]
+                        future_moves[player_count].append("UP")
+                elif event.key == K_DOWN:
                     current_x, current_y = move(current_x, current_y, 0, 45)
-                    update(player[0], current_x, current_y, screen)
-                    player_positions[0] = [current_x, current_y]
                     if player_count >= 2:
-                        future_moves[player_count].append("RIGHT")
-                if event.key == K_SPACE:
+                        future_moves[player_count].append("DOWN")
+                elif event.key == K_SPACE:
                     player_count = player_count+1
                     print("NEW PLAYER ADDED")
                     print("TOTAL PLAYERS: "+str(player_count))
+            update(player[0], current_x, current_y, screen)
+            player_positions[0] = [current_x, current_y]
             if player_count >= 2:
                 current_index = 0
                 for i in range(player_count-1):
                     for j in player_positions[current_index]:
+                        current_x, current_y = player_positions[current_index + 1]
                         if j == "LEFT":
-                            current_x, current_y = player_positions[current_index + 1]
                             current_x, current_y = move(current_x, current_y, -45, 0, screen)  # LEFT = (-45,0)  RIGHT = (45, 0)  UP = (0,-45)  DOWN=(0, 45)
-                            update(0, current_x, current_y)
-                            player_positions[current_index + 1] = [current_x, current_y]
-                            update(player[current_index+1], current_x, current_y)
                         elif j == "RIGHT":
-                            current_x, current_y = player_positions[current_index + 1]
                             current_x, current_y = move(current_x, current_y, 45, 0, screen)
-                            update(0, current_x, current_y)
-                            player_positions[current_index + 1] = [current_x, current_y]
-                            update(player[current_index + 1], current_x, current_y)
                         elif j == "UP":
-                            current_x, current_y = player_positions[current_index + 1]
                             current_x, current_y = move(current_x, current_y, 0, -45, screen)
-                            update(0, current_x, current_y)
-                            player_positions[current_index + 1] = [current_x, current_y]
-                            update(player[current_index + 1], current_x, current_y)
                         elif j == "DOWN":
-                            current_x, current_y = player_positions[current_index + 1]
                             current_x, current_y = move(current_x, current_y, 0, 45, screen)
-                            update(0, current_x, current_y)
-                            player_positions[current_index + 1] = [current_x, current_y]
-                            update(player[current_index + 1], current_x, current_y)
+                        update(0, current_x, current_y)
+                        player_positions[current_index + 1] = [current_x, current_y]
+                        update(player[current_index + 1], current_x, current_y)
                         current_index = current_index + 1
 
 
