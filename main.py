@@ -87,12 +87,15 @@ def draw_map(screen):
         else:
             print "No known tiles found"
 
-def check_valid(x, y):
+def check_block(x, y):
     px = x/45
     py = y/45
     check_index = TILEMAP[py * 10 + px]
     if check_index != 0:
-        return True
+        if check_index != 3:
+            return True
+        else:
+            return "GOAL"
     else:
         print ("Move invalid")
         return False
@@ -100,7 +103,7 @@ def check_valid(x, y):
 def move(start_x, start_y, x, y):  # 25, 25
     end_x = start_x + x
     end_y = start_y + y
-    if check_valid(end_x, end_y):
+    if check_block(end_x, end_y):
         return (end_x, end_y)
     else:
         return (start_x, start_y)
