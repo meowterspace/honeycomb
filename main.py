@@ -31,8 +31,8 @@ TOP = pygame.image.load('images/top.png')
 FLOORX = pygame.image.load('images/floorx.png')
 FLOORO = pygame.image.load('images/flooro.png')
 SIDE = pygame.image.load('images/side.png')
-GOAL = pygame.image.load('images/Goal.png')
-BLACK = pygame.image.load('images/black.png')
+GOAL = pygame.image.load('images/goal.png')
+#BLACK = pygame.image.load('images/black.png')
 player = [pygame.image.load('images/astro1.png'),
            pygame.image.load('images/astro2.png'),
            pygame.image.load('images/astro3.png'),
@@ -92,10 +92,9 @@ def check_block(x, y):
     py = y/45
     check_index = TILEMAP[py * 10 + px]
     if check_index != 0:
-        if check_index != 3:
-            return True
-        else:
+        if check_index == 3:
             return "GOAL"
+        else: return True
     else:
         print ("Move invalid")
         return False
@@ -105,6 +104,8 @@ def move(start_x, start_y, x, y):  # 25, 25
     end_y = start_y + y
     if check_block(end_x, end_y):
         return (end_x, end_y)
+    elif check_block(end_x, end_y) == "GOAL":
+        print 'GOAL'
     else:
         return (start_x, start_y)
     #DISPLAYSURF.blit(player, (playerx, playery))
